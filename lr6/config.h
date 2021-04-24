@@ -1,6 +1,7 @@
 #pragma once
 
 #include "figure.h"
+#include "stuff.h"
 
 #include <QMatrix4x4>
 #include <QObject>
@@ -15,8 +16,9 @@ public:
     explicit Config(QObject *parent = nullptr);
 
     bool is3D = true;
+    float light = 1;
 
-    Figure* figure;
+    Stuff* figure;
 
     void notify();
 

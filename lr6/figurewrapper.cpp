@@ -25,13 +25,13 @@ void FigureWrapper::mouseMoveEvent(QMouseEvent* event) {
 
     if (diff.x() != 0) {
         figure->rotate(-static_cast<float>(diff.x()) / 2,
-                       figure->model.inverted() * viewWrapper->upVector());
+                       figure->model().inverted() * viewWrapper->upVector());
     }
 
     if (diff.y() != 0) {
         figure->rotate(
                     -static_cast<float>(diff.y()) / 2,
-                    figure->model.inverted() * QVector3D::crossProduct(viewWrapper->lookVector(), viewWrapper->upVector())
+                    figure->model().inverted() * QVector3D::crossProduct(viewWrapper->lookVector(), viewWrapper->upVector())
                     );
     }
     emit changed();

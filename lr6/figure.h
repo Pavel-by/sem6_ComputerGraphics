@@ -39,9 +39,10 @@ public:
 
     QVector3D center;
     QVector<Edge> edges;
-    QMatrix4x4 model;
     QVector4D color = QVector4D(1.0f, 0.0f, 0.0f, 1.0f);
     QVector<Figure> children;
+
+    QMatrix4x4 model() const;
 
     void initialize3d(QOpenGLShaderProgram* program);
     void paint3d(QOpenGLShaderProgram* program);
@@ -51,6 +52,7 @@ public:
 
     void rotate(float angle, const QVector3D& vector);
     void scale(QVector3D vector);
+    void translate(QVector3D vector);
 
     void markNeedsPaint();
     void markVertexChanged();
@@ -58,6 +60,10 @@ public:
     Figure& operator=(const Figure& other);
 
 private:
+    QMatrix4x4 _modelRotation;
+    QMatrix4x4 _modelTranslate;
+    QMatrix4x4 _modelScale;
+
     QOpenGLVertexArrayObject _vao3d;
     QOpenGLVertexArrayObject _vaoEdges;
 

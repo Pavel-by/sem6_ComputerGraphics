@@ -44,13 +44,12 @@ void Figure::initialize3d(QOpenGLShaderProgram* program) {
 void Figure::paint3d(QOpenGLShaderProgram* program) {
     allocateBuffers3d();
     program->setUniformValue("color", color);
-    program->setUniformValue("model", model);
+    program->setUniformValue("model", model());
     _vao3d.bind();
     glDrawElements(GL_TRIANGLES, _indicesBuffer3d.size(), GL_UNSIGNED_INT, 0);
     _vao3d.release();
 
     for (Figure& f : children) {
-        f.model = model;
         f.paint3d(program);
     }
 }
@@ -92,8 +91,11 @@ void Figure::allocateBuffers3d() {
 
     _verticesBufferGL3d.bind();
     _verticesBufferGL3d.allocate(_verticesBuffer3d.constData(), _verticesBuffer3d.size() * sizeof(VertexData));
+    _verticesBufferGL3d.release();
+
     _indicesBufferGL3d.bind();
     _indicesBufferGL3d.allocate(_indicesBuffer3d.constData(), _indicesBuffer3d.size() * sizeof(GLuint));
+    _verticesBufferGL3d.release();
 }
 
 void Figure::initializeEdges(QOpenGLShaderProgram* program) {
@@ -119,13 +121,12 @@ void Figure::initializeEdges(QOpenGLShaderProgram* program) {
 void Figure::paintEdges(QOpenGLShaderProgram* program) {
     allocateBuffersEdges();
     program->setUniformValue("color", color);
-    program->setUniformValue("model", model);
+    program->setUniformValue("model", model());
     _vaoEdges.bind();
     glDrawElements(GL_LINES, _indicesBufferEdges.size(), GL_UNSIGNED_INT, 0);
     _vaoEdges.release();
 
     for (Figure& f : children) {
-        f.model = model;
         f.paint3d(program);
     }
 }
@@ -179,7 +180,9 @@ void Figure::markVertexChanged() {
 Figure& Figure::operator=(const Figure& other) {
     children = other.children;
     edges = other.edges;
-    model = other.model;
+    _modelTranslate = other._modelTranslate;
+    _modelScale = other._modelScale;
+    _modelRotation = other._modelRotation;
     color = other.color;
     _verticesChanged3d = true;
     _verticesChangedEdges = true;
@@ -187,15 +190,31 @@ Figure& Figure::operator=(const Figure& other) {
 }
 
 void Figure::rotate(float angle, const QVector3D& vector) {
-    QVector3D t = model * center;
-    model.translate(-t);
-    model.rotate(angle, vector);
-    model.translate(t);
+    _modelRotation.rotate(angle, vector);
+
+    for (Figure& child : children) {
+        child.rotate(angle, vector);
+    }
 }
 
 void Figure::scale(QVector3D vector) {
-    QVector3D t = model * center;
-    model.translate(-t);
-    model.scale(vector);
-    model.translate(t);
+    _modelScale.scale(vector);
+
+    /*for (Figure& child : children) {
+        child.scale(vector);
+    }*/
 }
+
+
+void Figure::translate(QVector3D vector) {
+    _modelTranslate.translate(_modelRotation * vector);
+
+    for (Figure& child : children) {
+        child.translate(vector);
+    }
+}
+
+QMatrix4x4 Figure::model() const {
+    return _modelTranslate * _modelRotation * _modelScale;
+}
+

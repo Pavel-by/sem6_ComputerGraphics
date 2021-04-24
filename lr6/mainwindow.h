@@ -20,7 +20,9 @@ private:
     void updateConfig();
 
 private slots:
-    void typeChanged(int type);
+    void showEdgesClicked();
+    void densityChanged(int density);
+    void lightChanged(int light);
 
     void xRotatePlus();
     void yRotatePlus();

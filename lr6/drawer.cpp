@@ -20,17 +20,10 @@ Drawer::Drawer(QWidget *parent) : QOpenGLWidget(parent)
     QObject::connect(&_viewWrapper, SIGNAL(changed()), this, SLOT(depenceChanged()));
     QObject::connect(&_figureWrapper, SIGNAL(changed()), this, SLOT(depenceChanged()));
     QObject::connect(Config::instance, SIGNAL(changed()), this, SLOT(depenceChanged()));
+    QObject::connect(&_stuff, SIGNAL(changed()), this, SLOT(depenceChanged()));
 
-    _figures = {
-        Stuff(),
-    };
-
-    for (Figure& f : _figures) {
-        QObject::connect(&f, SIGNAL(changed()), this, SLOT(depenceChanged()));
-    }
-
-    Config::instance->figure = &_figures[0];
-    _figureWrapper.figure = &_figures[0];
+    Config::instance->figure = &_stuff;
+    _figureWrapper.figure = &_stuff;
     _figureWrapper.viewWrapper = &_viewWrapper;
 }
 
@@ -44,18 +37,12 @@ void Drawer::depenceChanged() {
 void Drawer::initializeGL() {
     _programWrapper3d.initialize();
     _programWrapper3d.bind();
-
-    for (Figure& figure : _figures) {
-        figure.initialize3d(_programWrapper3d.program());
-    }
+    _stuff.initialize3d(_programWrapper3d.program());
     _programWrapper3d.release();
 
     _programWrapperEdges.initialize();
     _programWrapperEdges.bind();
-
-    for (Figure& figure : _figures) {
-        figure.initializeEdges(_programWrapperEdges.program());
-    }
+    _stuff.initializeEdges(_programWrapperEdges.program());
     _programWrapperEdges.release();
 }
 
@@ -91,12 +78,9 @@ void Drawer::paint3d() {
     program->setUniformValue("proj", projPerspective);
     program->setUniformValue("view", _viewWrapper.matrix());
     program->setUniformValue("lightPosition", lightPosition);
-    program->setUniformValue("lightColor", lightColor);
+    program->setUniformValue("lightColor", lightColor * Config::instance->light);
 
-    for (Figure& figure : _figures) {
-        figure.paint3d(program);
-        glClear(GL_DEPTH_BUFFER_BIT);
-    }
+    _stuff.paint3d(program);
 }
 
 void Drawer::paintEdges() {
@@ -116,10 +100,7 @@ void Drawer::paintEdges() {
     program->setUniformValue("proj", projPerspective);
     program->setUniformValue("view", _viewWrapper.matrix());
 
-
-    for (Figure& figure : _figures) {
-        figure.paintEdges(program);
-    }
+    _stuff.paintEdges(program);
 }
 
 void Drawer::mouseMoveEvent(QMouseEvent* event) {

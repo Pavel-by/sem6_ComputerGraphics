@@ -22,10 +22,10 @@ Stuff::Stuff()
     arrowX.color = QVector4D(1, 0, 0, 1);
     arrowY.color = QVector4D(0, 1, 0, 1);
     arrowZ.color = QVector4D(0, 0, 1, 1);
+    generate(20);
 }
 
 void Stuff::generate(int count) {
-    edges.clear();
     edges.resize(count * 5);
 
     int edgeIndex = 0;

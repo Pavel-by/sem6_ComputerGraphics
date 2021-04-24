@@ -3,6 +3,7 @@
 #include "figure.h"
 #include "figurewrapper.h"
 #include "shaderprogramwrapper.h"
+#include "stuff.h"
 #include "viewmatrixwrapper.h"
 
 #include <QOpenGLBuffer>
@@ -38,9 +39,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
+    Stuff _stuff;
     ShaderProgramWrapper _programWrapper3d = ShaderProgramWrapper(":/res/base.vert", ":/res/base.frag");
     ShaderProgramWrapper _programWrapperEdges = ShaderProgramWrapper(":/res/edges.vert", ":/res/edges.frag");
-    QVector<Figure> _figures;
     ViewMatrixWrapper _viewWrapper;
     FigureWrapper _figureWrapper;
 };
