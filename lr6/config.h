@@ -17,6 +17,7 @@ public:
 
     bool is3D = true;
     float light = 1;
+    bool isOrtho = false;
 
     Stuff* figure;
 

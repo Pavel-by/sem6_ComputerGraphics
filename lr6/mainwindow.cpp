@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->horizontalLayout->insertWidget(0, drawer, 1);
     QObject::connect(ui->showEdgesCheckbox, SIGNAL(clicked()), this, SLOT(showEdgesClicked()));
+    QObject::connect(ui->orthoCheckbox, SIGNAL(clicked()), this, SLOT(projectionChanged()));
+
     QObject::connect(ui->xRotatePlus, SIGNAL(clicked()), this, SLOT(xRotatePlus()));
     QObject::connect(ui->yRotatePlus, SIGNAL(clicked()), this, SLOT(yRotatePlus()));
     QObject::connect(ui->zRotatePlus, SIGNAL(clicked()), this, SLOT(zRotatePlus()));
@@ -48,6 +50,7 @@ void MainWindow::updateConfig() {
     Config& config = *Config::instance;
     config.is3D = !ui->showEdgesCheckbox->isChecked();
     config.light = static_cast<float>(ui->lightSlider->value()) / 100;
+    config.isOrtho = ui->orthoCheckbox->isChecked();
     config.notify();
 }
 
@@ -61,6 +64,10 @@ void MainWindow::densityChanged(int density) {
 }
 
 void MainWindow::lightChanged(int light) {
+    updateConfig();
+}
+
+void MainWindow::projectionChanged() {
     updateConfig();
 }
 

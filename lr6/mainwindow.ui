@@ -36,6 +36,13 @@
        </layout>
       </item>
       <item>
+       <widget class="QCheckBox" name="orthoCheckbox">
+        <property name="text">
+         <string>Ортогональная проекция</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Вращение</string>

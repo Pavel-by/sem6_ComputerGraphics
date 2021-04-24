@@ -73,12 +73,13 @@ void Drawer::paint3d() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    Config& config = *Config::instance;
     QOpenGLShaderProgram* program = _programWrapper3d.program();
 
-    program->setUniformValue("proj", projPerspective);
+    program->setUniformValue("proj", config.isOrtho ? projOrtho : projPerspective);
     program->setUniformValue("view", _viewWrapper.matrix());
     program->setUniformValue("lightPosition", lightPosition);
-    program->setUniformValue("lightColor", lightColor * Config::instance->light);
+    program->setUniformValue("lightColor", lightColor * config.light);
 
     _stuff.paint3d(program);
 }
@@ -97,7 +98,8 @@ void Drawer::paintEdges() {
 
     QOpenGLShaderProgram* program = _programWrapperEdges.program();
 
-    program->setUniformValue("proj", projPerspective);
+    Config& config = *Config::instance;
+    program->setUniformValue("proj", config.isOrtho ? projOrtho : projPerspective);
     program->setUniformValue("view", _viewWrapper.matrix());
 
     _stuff.paintEdges(program);

@@ -23,6 +23,7 @@ private slots:
     void showEdgesClicked();
     void densityChanged(int density);
     void lightChanged(int light);
+    void projectionChanged();
 
     void xRotatePlus();
     void yRotatePlus();
