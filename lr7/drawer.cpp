@@ -27,7 +27,6 @@ Drawer::Drawer(QWidget *parent) : QOpenGLWidget(parent)
         QObject::connect(f, SIGNAL(changed()), this, SLOT(depenceChanged()));
     }
 
-    _figures[0]->rotate(30, QVector3D(1,1,1));
     /*for (int i = 0; i < 1; i++) {
         Figure *figure = new Cube();
         figure->translate(
@@ -118,7 +117,6 @@ void Drawer::paintGL() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tempColor);
     writeColor(tempColor, config.materialEmission);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, tempColor);
-    std::cout << config.materialShininess << std::endl;
     glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, config.materialShininess);
 
     setupLight();
