@@ -39,10 +39,10 @@ MaterialConfig MaterialConfig::glassSideSide = {
 
 MaterialConfig MaterialConfig::ironLeg = {
     GL_FRONT_AND_BACK,
-    QColor(64, 64, 64),
-    QColor(102, 102, 102),
-    QColor(120, 120, 120),
+    QColor(49, 49, 49),
+    QColor(129, 129, 129),
+    QColor(130, 130, 130),
     QColor(),
-    20,
+    10,
 };
 
